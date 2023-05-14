@@ -16,24 +16,21 @@ from
  
  -- adding a new column
  alter table employee
-  add des varchar(50) default 'founder';
- 
- 
- -- updating a value of a column in a particular row
-update employee
-  set des = 'dummy1'
-where 
-  ssn = 123456789;
- 
- 
+  add des varchar(50) default 'manager';
+
+alter table employee
+    add pets int default 0;
+
  -- removing a column
  alter table employee
   drop column des;
- 
+
+alter table employee
+drop column pets;
  -- 1.1 Adding and deleting column :: END
  
- 
- 
+
+
  
  
  
@@ -53,20 +50,32 @@ alter table employee
 
 alter table employee
     modify salary float(10,6);
+
 -- Changing the column name
 alter table employee
   change minit minitial char(1);
 
 alter table employee
-    change minit middle_name char(1);
-  
+change minit minitial char(1);
+
+desc employee;
 
 -- 1.2 : Changing column name and data type :: END
+
+
 
 -- 1.22 : Creating a new table from an existing table
 create table emp as
     select concat(fname , middle_name, lname) as `Name`,ssn,super_ssn,dno from employee;
 select * from emp;
+
+create table basic as
+    select concat(fname ,minitial ,lname ) as 'Name',ssn
+from employee;
+
+drop table basic;
+
+select * from basic;
 
 -- 1.3: Adding and Removing Key :: START
 
@@ -81,6 +90,7 @@ create table recipes (
 );
 
 # inserting values into thee new table
+
 insert into recipes 
     (recipe_id, recipe_name,nothing) 
 values 
@@ -131,9 +141,13 @@ select
   substring_index(recipe_name, ' ', 1)      as upd_reciper_name
 from recipes;
 
+# In the above example the
+# substring_index(column_name,on what character do you want to split,the position of the element after splitting)
+# The above example you want to split the recipe_name column wherever the space character occurs " ", and the
+# position of the element you want to retrieve after splitting
 #concat two or more string
-select 
-  concat(fname, ' ' , lname) as name,
+select
+  concat(fname, ' ',minitial,' ' , lname) as name,
   -- substring_index( concat(fname, ' ' , lname) , ' ' , -1)  as test_name,
   ssn
 from employee;
@@ -155,3 +169,27 @@ from employee;
 -- 1.5 Date Manipulation :: END
 
 -- ------------------------------ Session 1 :: END ------------------------------
+
+-- Self Practice
+
+select * from recipes;
+
+select
+    recipe_name as org_recipe_name,
+    substring_index(recipe_name,' ',-1) as new_name
+from recipes;
+
+select
+  recipe_name as orig_recipe_name,
+  substring_index(recipe_name, ' ', 1)      as upd_reciper_name
+from recipes;
+
+
+# date manipulation
+
+select
+    bdate,
+    extract(year from bdate) as year,
+    extract(month from bdate) as month,
+    extract(day from bdate) as date
+from employee;
